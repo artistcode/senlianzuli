@@ -1,0 +1,266 @@
+{include file="Common/header" /}
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="module_table" lay-filter="module_table"></table>
+        </div>
+    </div>
+</div>
+<!--数据表tab start -->
+<script  type="text/html"  id="module_tab">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">添加</a>
+
+</script>
+<!--数据表tab end-->
+<!-- 表格操作列 -->
+<script type="text/html" id="module_tool">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!-- 表单弹窗 -->
+<script type="text/html" id="module_forms">
+    <form id="module_formsForm" lay-filter="module_formsForm" class="layui-form model-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">上级页面</label>
+            <div class="layui-input-inline">
+                    <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">页面名称</label>
+            <div class="layui-input-block">
+                <input name="module_name" placeholder="请输入权限名称" type="text" class="layui-input" maxlength="50"
+                       lay-verType="tips" lay-verify="required" required/>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">链接地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="module_control" placeholder="控制器名称" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">/</div>
+                <div class="layui-input-inline">
+
+                    <input type="hidden" name="module_parent">
+                    <input type="text" name="module_method" placeholder="方法昵称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">页面类型</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="module_type"  title="列表"  value="1" checked>
+                    <input type="radio" name="module_type"   title="详情"  value="2">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">页面文件</label>
+            <div class="layui-input-inline">
+                <input type="file" style="display:none"  onchange="document.querySelector('#asist').innerText =this.value" name="template" accept="text/html">
+                <button type="button" class="layui-btn layui-btn-primary" onclick="document.querySelector('input[name=\'template\']').click();" id="up_html"><i class="layui-icon layui-icon-upload"></i>只允许HTML文件</button>
+            </div>
+            <div class="layui-form-mid layui-word-aux" id='asist'>模板文件请上传</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文件名称</label>
+            <div class="layui-input-inline">
+                <input type="text"  name="template_file"  class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux" id='asist'>模板文件请上传</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序号</label>
+            <div class="layui-input-inline">
+                <input   name="sort" placeholder="请输入排序号"  value="255"  type="number" autocomplete="off" class="layui-input" min="0"
+                       max="1000"
+                       lay-verType="tips" lay-verify="required|number" required/>
+            </div>
+        </div>
+        <div class="layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
+            <button class="layui-btn" lay-filter="modelSubmit" lay-submit>保存</button>
+        </div>
+    </form>
+</script>
+<script>
+    layui.use(['layer', 'form', 'table', 'admin', 'treetable', 'treeSelect'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+        var treetable = layui.treetable;
+        var treeSelect = layui.treeSelect;
+
+        // 渲染表格
+        function renderTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'module_id',
+                treePidName: 'module_parent',
+                toolbar: '#module_tab',
+                elem: '#module_table',
+                url: '{:url("admin/Module/index")}',
+
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers', title: '#'},
+                    {field: 'module_name', title: '权限名称', minWidth: 200},
+                    {
+                        title: '菜单url', templet: function (d) {
+                            return d.module_control + '/' + d.module_method;
+                        }
+                    },
+                    {field: 'sort', title: '排序号', align: 'center'},
+                    {templet: '#module_tool', title: '操作', align: 'center', minWidth: 120}
+                ]],
+                done: function () {
+                    treetable.foldAll('#module_table');
+                }
+            });
+        }
+
+        renderTable();
+        // 添加按钮点击事件
+        $('#btnAddAuth').click(function () {
+            showEditModel("{:url('admin/menu/add')}");
+        });
+        // 工具条点击事件
+        table.on('tool(module_table)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+
+
+            } else if (layEvent === 'del') { // 删除
+
+            }
+        });
+
+
+        table.on('toolbar(module_table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            /*添加*/
+            if (obj.event == 'add') {
+                admin.open({
+                    type: 1,
+                    anim: 4,
+                    area: '600px',
+                    title: '添加',
+                    content: $('#module_forms').html(),
+                    success: function (layero, dIndex) {
+                        $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                        form.render();
+                        treeSelect.render({
+                            // 选择器
+                            elem: '#tree',
+                            // 数据
+                            data: '{:url("admin/Module/add")}',
+                            // 异步加载方式：get/post，默认get
+                            type: 'get',
+                            // 占位符
+                            placeholder: '输入关键字',
+                            // 是否开启搜索功能：true/false，默认false
+                            search: true,
+                            // 点击回调
+                            click: function (d) {
+                                $('input[name="menu_parent_id"]').val(d.current.id);
+                            },
+                            success: function (d) {
+                            }
+                        });
+                        // 表单提交事件
+                        form.on('submit(modelSubmit)', function (data) {
+                            let form_data = new FormData(data.form);
+
+                            $.ajax({
+                                url: "{:url('admin/Module/add')}",
+                                type: 'post',
+                                processData: false,
+                                contentType: false,
+                                data: form_data,
+                                success: function () {
+                                    alert("ok")
+                                }
+                            });
+                            return false;
+
+                        });
+
+                    }
+                });
+
+            }
+        });
+
+        table.on('tool(module_table)',function(obj){
+            console.log(obj);
+        if (obj.event = 'edit') {
+          admin.open({
+              type: 1,
+              anim: 4,
+              area: '600px',
+              title: '添加',
+              content: $('#module_forms').html(),
+              success: function (layero, dIndex) {
+                  $(layero).children('.layui-layer-content').css('overflow', 'visible');
+                  form.val('module_formsForm',obj.data);
+                  form.render();
+                  treeSelect.render({
+                      // 选择器
+                      elem: '#tree',
+                      // 数据
+                      data: '{:url("admin/Module/add")}',
+                      // 异步加载方式：get/post，默认get
+                      type: 'get',
+                      // 占位符
+                      placeholder: '输入关键字',
+                      // 是否开启搜索功能：true/false，默认false
+                      search: true,
+                      // 点击回调
+                      click: function (d) {
+                          $('input[name="menu_parent_id"]').val(d.current.id);
+                      },
+                      success: function (d) {
+                      }
+                  });
+                  // 表单提交事件
+                  form.on('submit(modelSubmit)', function (data) {
+                      let form_data = new FormData(data.form);
+
+                      $.ajax({
+                          url: "{:url('admin/Module/add')}",
+                          type: 'post',
+                          processData: false,
+                          contentType: false,
+                          data: form_data,
+                          success: function () {
+                              alert("ok")
+                          }
+                      });
+                      return false;
+
+                  });
+              }
+          });
+      }
+        })
+    });
+</script>
+</body>
+</html>
