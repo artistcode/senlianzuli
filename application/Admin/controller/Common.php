@@ -17,6 +17,28 @@ class Common extends  Controller
         }
     }
 
+    protected  function api_format($code,$msg,$data=array(),$count='')
+    {
+        $interface = [
+            'code'=>$code,
+            'msg'=>$msg,
+
+        ];
+
+        if (!empty($count)){
+            $interface['count'] =$count;
+        }
+        if (!empty($data)){
+            $interface['data'] = $data;
+        }
+
+        exit(json_encode($interface));
+    }
+
+
+
+
+
 }
 
 

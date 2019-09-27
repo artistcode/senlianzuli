@@ -10,22 +10,15 @@ class Group extends  Common
     public function index()
     {
         $view = new View();
-
-
         if(Request::instance()->isAjax()){
              $data  =   Db::name('admin_group')->page(sprintf('%s,%s',input('get.page'),input('get.limit')))->select();
                  $count = Db::name('admin_group')->count();
                          $interface =  array('code'=>0,'count'=>$count,'msg'=>'数据返回成功','data'=>$data);
-
                          echo json_encode($interface);
                          return;
         }
-
-
         return     $view->fetch();
-
     }
-
        /*更新*/
  public function  upd(){
        if(Request::instance()->isAjax()){
@@ -33,8 +26,6 @@ class Group extends  Common
          $code=500;
          $msg ='错误';
           $param = Request::instance()->param();
-
-
             $upd_res = Db::name('admin_group')->update($param);
 
             if($upd_res){
@@ -45,7 +36,6 @@ class Group extends  Common
                 $code =404;
                 $msg = '修改失败';
              }
-
          $interface =  array('code'=>$code,'msg'=>$msg);
           echo json_encode($interface);
           return;  /*处理完成退出函数*/
@@ -61,14 +51,11 @@ class Group extends  Common
 
                if(Request::instance()->isPost()){
                  //$user = Loader::model("User");
-
                    $res = Db::name('admin_group')->insert(input('post.'));
-
                   if($res){
                     $code = 200;
                     $massage = '添加成功';
                  }else{
-
                      $code  = 500;
                      $massage = '添加失败';
                  }
@@ -94,7 +81,6 @@ class Group extends  Common
       /*保留原始下标*/
        $tree_auth = $this->getTree($menus,'id','pId','children');
        $interface  =array('code'=>200,'have_auth'=>$have_auth,'menu_list'=>$tree_auth);
-
        echo  json_encode($interface);
        return;
     }
@@ -113,10 +99,7 @@ class Group extends  Common
             }
         }
         return $tree;
-
-
     }
-
       public function  del(){
             $res = Db::name('Module')->delete(input('get.id'));
             $code  = 404;
@@ -131,6 +114,5 @@ class Group extends  Common
             $interface =  array('code'=>$code,'msg'=>$msg);
             echo json_encode($interface);
             return;
-
        }
 }

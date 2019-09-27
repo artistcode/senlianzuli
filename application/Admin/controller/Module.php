@@ -15,8 +15,6 @@ class Module extends Common
                 return; //退出
             }
         }
-
-
         $view = new View;
         return $view->fetch();
     }
@@ -46,7 +44,6 @@ class Module extends Common
                         $interface['msg'] = $template->getError();
                         $interface['code'] = 204;
                     }
-
                 }else{
                     $interface['msg'] ='模板文件必须上传';
                     $interface['code'] = 500;
@@ -57,6 +54,7 @@ class Module extends Common
                 $data  = Db::name('Module')->field('module_id as id , module_name as name ,module_parent as pid ')->select();
                 $interface =   $this->getTree($data);
                 array_unshift($interface,array('id'=>0,'name'=>'顶级菜单','pid'=>0));
+
                 echo  json_encode($interface);
             }
         }
@@ -82,7 +80,7 @@ class Module extends Common
 
 
     public function  del(){
-        $res = Db::name('admin_group')->delete(input('get.admin_group_id'));
+        $res = Db::name('Module')->delete(input('get.id'));
         $code  = 404;
         $msg = '操作失败';
         if($res){

@@ -11,7 +11,7 @@ class  UserModel extends Model
 {
     protected $table = 'tpt_admin';
 
-    /*¼ì²éµÇÂ¼*/
+    /*æ£€æŸ¥ç™»å½•*/
     public function checkUser($username, $password)
     {
         $condition = array(
@@ -20,17 +20,17 @@ class  UserModel extends Model
         );
         $find_status = parent::get($condition);
         if ($find_status) {
-            /*µÇÂ¼³É¹¦*/
+            /*ç™»å½•æˆåŠŸ*/
             session('username', $find_status['admin_nickname']);
             session('uid', $find_status['admin_id']);
             $this->getMenu($find_status['admin_group']);
             return true;
         } else {
-            /*µÇÂ¼Ê§°Ü*/
+            /*ç™»å½•å¤±è´¥*/
             return false;
         }
     }
-    /*»ñÈ¡È¨ÏÞ*/
+    /*èŽ·å–æƒé™*/
     /**
      * @param $group_id
      */
@@ -39,17 +39,18 @@ class  UserModel extends Model
         $user_group =Db::name('admin_group')->find($group_id);
         $auth = $user_group['menu_id_list'];
         if ($auth == '*'){
-            /*³¬¼¶¹ÜÀíÔ±*/
+            /*è¶…çº§ç®¡ç†å‘˜*/
             $admin_menu =  Db::name('admin_menu')->where(1)->order('sort asc ')->select();
+
         }else{
-            /*ÆÕÍ¨¹ÜÀíÔ±*/
+            /*æ™®é€šç®¡ç†å‘˜*/
             $admin_menu =  Db::name('admin_menu')->where(sprintf('menu_id in(%s)',$auth))->order('sort asc ')->select();
         }
         session('admin_menu',$admin_menu);
     }
 
 
-    /*¼ÇÂ¼ÈÕÖ¾*/
+    /*è®°å½•æ—¥å¿—*/
     public function record()
     {
 

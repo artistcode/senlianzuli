@@ -7,7 +7,7 @@ use \think\Request;
 use \think\Db;
 use \think\Loader;
 
-class Menu extends Common
+class  Menu extends Common
 {
     Public function  index(){
         if(Request::instance()->isAjax()){

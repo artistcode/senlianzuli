@@ -10,3 +10,18 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
+
+
+ function list_format($msg = '', $url = null, $data = '',$count)
+{
+
+    $interface = [
+        'code'=>200,
+        'msg'=>$msg,
+        'data'=>$data,
+    ];
+    if (!empty($count)){
+        $interface['count'] =$count;
+    }
+    exit(json_encode($interface));
+}

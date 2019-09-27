@@ -88,7 +88,6 @@ class Column extends Common
         echo json_encode($interface);
         return;
     }
-
     public function upd()
     {
         if (Request::instance()->isAjax()) {

@@ -116,7 +116,6 @@
                 toolbar: '#module_tab',
                 elem: '#module_table',
                 url: '{:url("admin/Module/index")}',
-
                 cellMinWidth: 100,
                 cols: [[
                     {type: 'numbers', title: '#'},
@@ -145,10 +144,7 @@
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'edit') { // 修改
-
-
             } else if (layEvent === 'del') { // 删除
-
             }
         });
 
@@ -187,7 +183,6 @@
                         // 表单提交事件
                         form.on('submit(modelSubmit)', function (data) {
                             let form_data = new FormData(data.form);
-
                             $.ajax({
                                 url: "{:url('admin/Module/add')}",
                                 type: 'post',
@@ -199,9 +194,7 @@
                                 }
                             });
                             return false;
-
                         });
-
                     }
                 });
 
@@ -209,8 +202,8 @@
         });
 
         table.on('tool(module_table)',function(obj){
-            console.log(obj);
-        if (obj.event = 'edit') {
+
+        if (obj.event == 'edit') {
           admin.open({
               type: 1,
               anim: 4,
@@ -242,7 +235,6 @@
                   // 表单提交事件
                   form.on('submit(modelSubmit)', function (data) {
                       let form_data = new FormData(data.form);
-
                       $.ajax({
                           url: "{:url('admin/Module/add')}",
                           type: 'post',
@@ -250,15 +242,20 @@
                           contentType: false,
                           data: form_data,
                           success: function () {
-                              alert("ok")
+
                           }
                       });
                       return false;
-
                   });
               }
           });
       }
+        if (obj.event=='del'){
+            $.get('{:url("admin/module/del")}',{id:obj.data.module_id},function(res){
+                console.log(res);
+                obj.del();
+            });
+        }
         })
     });
 </script>

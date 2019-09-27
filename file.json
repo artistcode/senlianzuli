@@ -1,0 +1,265 @@
+{
+  "code": 200,
+  "msg": "菜单返回成功",
+  "data": [
+    {
+      "url": "\/admin\/public\/index.html",
+      "name": "主页",
+      "id": 48,
+      "icon": "layui-icon layui-icon-home",
+      "pid": 0
+    },
+    {
+      "url": "javascript:;",
+      "name": "订单管理",
+      "id": 72,
+      "icon": "layui-icon layui-icon-rate-solid",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/order\/index.html",
+          "name": "订单列表",
+          "id": 83,
+          "icon": "layui-icon layui-icon-list",
+          "pid": 72
+        },
+        {
+          "url": "\/admin\/order\/statistics.html",
+          "name": "订单统计",
+          "id": 84,
+          "icon": "layui-icon ",
+          "pid": 72
+        },
+        {
+          "url": "\/admin\/order\/ExchangeAPurchase.html",
+          "name": "商品退换",
+          "id": 85,
+          "icon": "layui-icon ",
+          "pid": 72
+        }
+      ]
+    },
+    {
+      "url": "javascript:;",
+      "name": "产品管理",
+      "id": 11,
+      "icon": "layui-icon layui-icon-cart",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/product\/index.html",
+          "name": "商品列表",
+          "id": 13,
+          "icon": "layui-icon layui-icon-rate-half",
+          "pid": 11
+        },
+        {
+          "url": "\/admin\/type\r\n\/index.html",
+          "name": "商品类型",
+          "id": 15,
+          "icon": "layui-icon ",
+          "pid": 11
+        },
+        {
+          "url": "\/admin\/category\/index.html",
+          "name": "商品分类",
+          "id": 14,
+          "icon": "layui-icon ",
+          "pid": 11
+        },
+        {
+          "url": "\/admin\/Attribute\/index.html",
+          "name": "属性管理",
+          "id": 12,
+          "icon": "layui-icon ",
+          "pid": 11
+        },
+        {
+          "url": "\/admin\/product\/recycle.html",
+          "name": "商品回收站",
+          "id": 49,
+          "icon": "layui-icon ",
+          "pid": 11
+        },
+        {
+          "url": "\/admin\/brand\/index.html",
+          "name": "品牌管理",
+          "id": 91,
+          "icon": "layui-icon layui-icon-flag",
+          "pid": 11
+        }
+      ]
+    },
+    {
+      "url": "\/admin\/custom\/index.html",
+      "name": "会员管理",
+      "id": 73,
+      "icon": "layui-icon layui-icon-friends",
+      "pid": 0
+    },
+    {
+      "url": "\/admin\/column\/index.html",
+      "name": "栏目管理",
+      "id": 87,
+      "icon": "layui-icon layui-icon-shrink-right",
+      "pid": 0
+    },
+    {
+      "url": "javascript:;",
+      "name": "反馈系统",
+      "id": 75,
+      "icon": "layui-icon layui-icon-list",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/Feedback\/leave.html",
+          "name": "留言管理",
+          "id": 76,
+          "icon": "layui-icon ",
+          "pid": 75
+        },
+        {
+          "url": "\/admin\/Foodback\/customer_service.html",
+          "name": "客服管理",
+          "id": 77,
+          "icon": "layui-icon ",
+          "pid": 75
+        }
+      ]
+    },
+    {
+      "url": "javascript:;",
+      "name": "文章管理",
+      "id": 18,
+      "icon": "layui-icon layui-icon-list",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/ArCategory\/index.html",
+          "name": "文章分类",
+          "id": 19,
+          "icon": "layui-icon ",
+          "pid": 18
+        },
+        {
+          "url": "\/admin\/Article\/index.html",
+          "name": "文章列表",
+          "id": 20,
+          "icon": "layui-icon ",
+          "pid": 18
+        }
+      ]
+    },
+    {
+      "url": "javascript:;",
+      "name": "RBAC",
+      "id": 1,
+      "icon": "layui-icon layui-icon-user\r\n",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/Admin\/index.html",
+          "name": "管理员",
+          "id": 40,
+          "icon": "layui-icon layui-icon-username",
+          "pid": 1
+        },
+        {
+          "url": "\/admin\/Menu\/index.html",
+          "name": "权限",
+          "id": 9,
+          "icon": "layui-icon layui-icon-auz",
+          "pid": 1
+        },
+        {
+          "url": "\/admin\/Group\/index.html",
+          "name": "角色",
+          "id": 10,
+          "icon": "layui-icon layui-icon-circle-dot",
+          "pid": 1
+        }
+      ]
+    },
+    {
+      "url": "javascript:;",
+      "name": "系统管理",
+      "id": 67,
+      "icon": "layui-icon layui-icon-log",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/system\/login_log.html",
+          "name": "登录日志",
+          "id": 68,
+          "icon": "layui-icon layui-icon-log",
+          "pid": 67
+        },
+        {
+          "url": "\/admin\/system\/backup.html",
+          "name": "数据备份",
+          "id": 71,
+          "icon": "layui-icon layui-icon-fonts-clear",
+          "pid": 67
+        },
+        {
+          "url": "\/admin\/setting\/webset.html",
+          "name": "网站设置",
+          "id": 70,
+          "icon": "layui-icon layui-icon-website",
+          "pid": 67
+        },
+        {
+          "url": "\/admin\/system\/operation_log.html",
+          "name": "操作日志",
+          "id": 69,
+          "icon": "layui-icon layui-icon-log",
+          "pid": 67
+        }
+      ]
+    },
+    {
+      "url": "javascript:;",
+      "name": "设置",
+      "id": 78,
+      "icon": "layui-icon layui-icon-set-sm",
+      "pid": 0,
+      "subMenus": [
+        {
+          "url": "\/admin\/banner\/index.html",
+          "name": " banner图管理",
+          "id": 79,
+          "icon": "layui-icon layui-icon-picture",
+          "pid": 78
+        },
+        {
+          "url": "\/admin\/setting\/infomation.html",
+          "name": "基本信息",
+          "id": 80,
+          "icon": "layui-icon ",
+          "pid": 78
+        },
+        {
+          "url": "\/admin\/setting\/Watermark.html",
+          "name": "图片水印",
+          "id": 81,
+          "icon": "layui-icon ",
+          "pid": 78
+        },
+        {
+          "url": "\/admin\/Phone\/menu.html",
+          "name": "手机菜单",
+          "id": 82,
+          "icon": "layui-icon ",
+          "pid": 78
+        }
+      ]
+    },
+    {
+      "url": "\/admin\/Module\/index.html",
+      "name": "模块管理",
+      "id": 89,
+      "icon": "layui-icon layui-icon-template-1",
+      "pid": 0
+    }
+  ]
+}

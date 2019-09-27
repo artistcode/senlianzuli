@@ -1,0 +1,243 @@
+﻿{include  file="Common/header" /}
+<body>
+
+<!-- 页面加载loading -->
+<div class="page-loading">
+    <div class="ball-loader">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body table-tool-mini">
+            <div class="toobal">
+                <div class="layui-btn-group " id="toolbar">
+                    <button class="layui-btn layui-btn-sm  layui-btn-primary" lay-even="add"><i
+                            class="layui-icon layui-icon-add-circle"></i></button>
+                    <button class="layui-btn layui-btn-sm  layui-btn-primary" lay-even="delete"><i
+                            class="layui-icon layui-icon-delete"></i></button>
+                </div>
+            </div>
+            <table class="layui-table" id="attribute_list" lay-filter="attribute_list"></table>
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="attribute_operation">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="attribute_list">属性</a>
+</script>
+<!-- 表格状态列 -->
+
+
+<!-- 表单弹窗 -->
+<script type="text/html" id="form_template">
+    <form action="" class="layui-form" style="margin-top:30px;" lay-filter="type_form">
+        <div class="layui-form-item">
+            <label  class="layui-form-label">属性名</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input"></div>
+            </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">商品类型</label>
+            <div class="layui-input-inline">
+                <select name="type_id">
+                    <option value="">请选择</option>
+                    {volist name="type" id="vo"}
+                    <option value="{$vo.type_id}">{$vo.type_name}</option>
+                    {/volist}
+
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label  class="layui-form-label">属性类型</label>
+            <div class="layui-input-inline">
+                <select name="type_id" >
+                    <option value="">请选择</option>
+                    {volist name="attr_type" id="vo"}
+                    <option value="{$vo.attr_type_id}">{$vo.attr_type_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item"><label  class="layui-form-label">属性值</label>
+            <div class="layui-input-block" >
+                <input type="text" name="attr_val" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="type_submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</script>
+<!-- js部分 -->
+
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'admin', 'tagsInput'], function () {
+        let $ = layui.jquery,
+            layer = layui.layer,
+            form = layui.form,
+            table = layui.table,
+            util = layui.util,
+            admin = layui.admin,
+            tagsInput = layui.tagsInput;
+        renderTable = function () {
+            table.render({
+                elem: '#attribute_list',
+                url: './',
+                page: true,
+                limit: 10,
+                toolbar: true,
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers', title: '#'},
+                    {type: 'checkbox'},
+                    {field: 'attr_name', sort: true, title: '名称'},
+                    {field: 'attr_type', sort: true, title: '类型'},
+                    {field: 'attr_input_type', sort: true, title: '录入方式'},
+                    {field: 'attr_values', sort: true, title: '可以选值'},
+                    {align: 'center', toolbar: '#attribute_operation', title: '操作', minWidth: 200}
+                ]]
+                , response: {
+                    statusName: 'code' //规定数据状态的字段名称，默认：code
+                    , statusCode: 200 //规定成功的状态码，默认：0
+                }
+
+            });
+        };
+        renderTable(); //初始化表格
+
+        // 工具条点击事件
+        table.on('tool(attribute_list)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            switch (layEvent) {
+                case 'edit':
+                    admin.open({
+                        type: 1,
+                        shade: [1, '#393D49'],
+                        anim: 4,
+                        area: ['600px', '600px'],
+                        title: '类型编辑',
+                        content: $('#form_template').html(),
+                        success: function (layero, dIndex) {
+                            // profiling   analyze
+                            form.val('type_form', obj.data);
+                            $('input[name=type_id]').val(obj.data['type_id']);
+                            form.on('submit(type_submit)', function (data) {
+                                let field = data.field; // 表单提交字段
+                                $.post('edit', field, function (response) {
+                                    response = JSON.parse(response);
+                                    switch (response.code) {
+                                        case 200:
+                                            layer.msg(response.msg, {icon: 1});
+                                            renderTable();
+                                            layer.close(dIndex);
+                                            break;
+                                        default :
+                                            layer.msg(response.msg, {icon: 5});
+
+                                    }
+                                });
+                                return false;
+                            });
+                        }
+                    });
+                    break;
+                case 'del':
+                    $.get('delete', {id: obj.data.type_id}, function (response) {
+                        response = JSON.parse(response);
+                        switch (response.code) {
+                            case 200:
+                                layer.msg(response.msg, {icon: 1});
+                                obj.del();
+                                break;
+                            default :
+                                layer.msg(response.msg, {icon: 5});
+                        }
+                    });
+                    break;
+                case 'attribute_list':
+                    alert('check attribute');
+                    break;
+                default :
+                    console.error('未定义事件' + location.href);
+
+            }
+
+        });
+        /*头部工具点击事件*/
+        $('#toolbar').on('click', 'button', function (e) {
+            let target = e.currentTarget;
+            let event = target.getAttribute('lay-even');
+            switch (event) {
+                case 'add' :
+                    /*类型添加*/
+                    admin.open({
+                        type: 1,
+                        shade: [1, '#393D49'],
+                        anim: 4,
+                        area: ['600px', '600px'],
+                        title: '添加',
+                        content: $('#form_template').html(),
+                        success: function (layero, dIndex) {
+                            // profiling   analyze
+                            $('input[name=attr_val]').tagsInput();
+                            form.render();
+                            form.on('submit(type_submit)', function (data) {
+                                let field = data.field; // 表单提交字段
+                                $.post('add', field, function (response) {
+                                    response = JSON.parse(response);
+
+                                    switch (response.code) {
+                                        case 200:
+                                            layer.msg(response.msg, {icon: 1});
+                                            renderTable();
+                                            layer.close(dIndex);
+                                            break;
+                                        default :
+                                            layer.msg(response.msg, {icon: 5});
+
+                                    }
+                                });
+                                return false;
+                            });
+                        }
+
+                    });
+                    break;
+                case 'delete':
+                    let checkStatus = table.checkStatus('attribute_list');
+                    let checkData = checkStatus.data.map((item) => item['type_id']);
+                    $.get('delete', {id: checkData.join(',')}, function (response) {
+                        response = JSON.parse(response);
+                        switch (response.code) {
+                            case 200:
+                                layer.msg(response.msg, {icon: 1});
+                                renderTable();
+                                layer.close(dIndex);
+                                break;
+                            default :
+                                layer.msg(response.msg, {icon: 5});
+                        }
+                    });
+                    break;
+                default :
+                    console.error('未定义事件');
+
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>
