@@ -1,4 +1,4 @@
-﻿{include  file="Common/header" /}
+{include file="Common/header" /}
 <body>
 
 <!-- 页面加载loading -->
@@ -11,205 +11,265 @@
 <!-- 正文开始 -->
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-card-body table-tool-mini">
+        <div class="layui-card-body">
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">账&emsp;号：</label>
+                        <label class="layui-form-label w-auto">搜索：</label>
                         <div class="layui-input-inline mr0">
-                            <input name="username" class="layui-input" type="text" placeholder="输入账号"/>
+                            <input id="edtSearchAuth" class="layui-input" type="text" placeholder="输入关键字"/>
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">用户名：</label>
-                        <div class="layui-input-inline mr0">
-                            <input name="nickName" class="layui-input" type="text" placeholder="输入用户名"/>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label w-auto">性&emsp;别：</label>
-                        <div class="layui-input-inline mr0">
-                            <select name="sex">
-                                <option value="">选择性别</option>
-                                <option value="男">男</option>
-                                <option value="女">女</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="padding-right: 110px;">
-                        <button class="layui-btn icon-btn" lay-filter="formSubSearchUser" lay-submit>
-                            <i class="layui-icon">&#xe615;</i>搜索
+                        <button id="btnSearchAuth" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="btnAddUser" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="btnAddAuth" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="btnExpandAuth" class="layui-btn icon-btn">全部展开</button>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="btnFoldAuth" class="layui-btn icon-btn">全部折叠</button>
                     </div>
                 </div>
             </div>
 
-            <table class="layui-table" id="tableUser" lay-filter="tableUser"></table>
+            <table class="layui-table" id="tableAuth" lay-filter="tableAuth"></table>
         </div>
     </div>
 </div>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="tableBarUser">
+<script type="text/html" id="tableBarAuth">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
 </script>
-<!-- 表格状态列 -->
-
-<!--用户状态start-->
-<script type="text/html" id="tableStateUser">
-    <input type="checkbox" lay-filter="ckStateUser" value="{{d.admin_id}}" lay-skin="switch"
-           lay-text="正常|锁定" {{d.status==0?'checked':''}}/>
-</script>
-<!--用户状态end-->
 <!-- 表单弹窗 -->
-<script type="text/html" id="modelUser">
-    <form id="modelUserForm" lay-filter="modelUserForm" class="layui-form model-form">
-        <input name="admin_id" type="hidden"/>
+<script type="text/html" id="modelAuth">
+    <form id="modelAuthForm" lay-filter="modelAuthForm" class="layui-form model-form">
+        <input name="menu_id" type="hidden"/>
         <div class="layui-form-item">
-            <label class="layui-form-label">昵称</label>
+            <label class="layui-form-label">上级菜单</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tree" lay-filter="tree" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限名称</label>
             <div class="layui-input-block">
-                <input name="admin_nickname" placeholder="请输入昵称" type="text" class="layui-input" maxlength="20"
+                <input name="menu_name" placeholder="请输入权限名称" type="text" class="layui-input" maxlength="50"
                        lay-verType="tips" lay-verify="required" required/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">账号</label>
+            <label class="layui-form-label">权限类型</label>
             <div class="layui-input-block">
-                <input name="admin_account" placeholder="请输入账号" type="text" class="layui-input" maxlength="20"
-                       lay-verType="tips" lay-verify="required" required/>
+                <input name="is_menu" type="radio" value="0" title="菜单" checked/>
+                <input name="is_menu" type="radio" value="1" title="按钮"/>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">性别</label>
-            <div class="layui-input-block">
-                <input type="radio" name="sex" value="0" title="人妖" checked/>
-                <input type="radio" name="sex" value="1" title="男" />
-                <input type="radio" name="sex" value="2" title="女"/>
+            <div class="layui-inline">
+                <label class="layui-form-label">链接地址</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="control" placeholder="控制器名称" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">/</div>
+                <div class="layui-input-inline">
+                    <input type="hidden" name="icon">
+                    <input type="hidden" name="menu_parent_id">
+                    <input type="text" name="method" placeholder="方法昵称" autocomplete="off" class="layui-input">
+                </div>
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">角色</label>
+      <!--  <div class="layui-form-item">
+            <label class="layui-form-label">权限标识</label>
             <div class="layui-input-block">
-                <select name="admin_group"  lay-verType="tips" lay-verify="required">
-                    <option value="">请选择角色</option>
 
-                </select>
+                <input name="authority" placeholder="请输入权限标识" autocomplete="off" type="text" class="layui-input"/>
+            </div>
+        </div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">菜单图标</label>
+            <div class="layui-input-block">
+                <input type="text" id="iconPicker" name="icon" lay-filter="iconPicker" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序号</label>
+            <div class="layui-input-inline">
+                <input   name="sort" placeholder="请输入排序号"  value="255"  type="number" autocomplete="off" class="layui-input" min="0"
+                       max="1000"
+                       lay-verType="tips" lay-verify="required|number" required/>
             </div>
         </div>
         <div class="layui-form-item text-right">
             <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
-            <button class="layui-btn" lay-filter="modelSubmitUser" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="modelSubmitAuth" lay-submit>保存</button>
         </div>
     </form>
 </script>
-<script type="text/html" id="repassword">
-    <form id="repasswd" lay-filter="repasswd" class="layui-form model-form">
-        <input name="admin_id" type="hidden"/>
-        <div class="layui-form-item">
-            <label class="layui-form-label">昵称</label>
-            <div class="layui-input-block">
-                <input name="admin_nickname" placeholder="请输入昵称" type="text" class="layui-input" maxlength="20"
-                       lay-verType="tips" lay-verify="required" required/>
-            </div>
-        </div>
-
-        <div class="layui-form-item text-right">
-            <button class="layui-btn layui-btn-primary" type="button" ew-event="closePageDialog">取消</button>
-            <button class="layui-btn" lay-filter="repasswdsubmit" lay-submit>保存</button>
-        </div>
-    </form>
-</script>
-
-<!-- js部分 -->
-
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'admin'], function () {
+    layui.use(['layer', 'form', 'table', 'admin', 'treetable', 'iconPicker', 'treeSelect'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
-        var util = layui.util;
         var admin = layui.admin;
-        // 渲染表格
-        var insTb = table.render({
-            elem: '#tableUser',
-            url: '{:url("admin/Admin/index")}',
-            page: true,
-            toolbar: true,
-            cellMinWidth: 100,
-            cols: [[
-                {type: 'numbers', title: '#'},
-                {field: 'admin_nickname', sort: true, title: '账号'},
-                {field: 'admin_account', sort: true, title: '用户名'},
-                {field: 'sex', sort: true, align:'center',title: '性别',templet:function(d){
-                        switch (d.sex) {
-                            case  1 :
-                                return '<font style="border: 1px solid #cccccc; border-radius:25px; color:rebeccapurple ">男</font>';
-                                break;
-                            case 2 :
-                                return  '<font style="border: 1px solid #cccccc; border-radius:25px; color:red ">女</font>';
-                                break;
-                            default :
-                                return  '<font style="border: 1px solid #cccccc; border-radius:25px; color:pink ">人妖</font>';
-                        }
-                    }},
-                {
-                    field: 'addtime', sort: true, templet: function (d) {
-                        return util.toDateString(d.addtime);
-                    }, title: '创建时间'
-                },
-                {field: 'state', sort: true, templet: '#tableStateUser', title: '状态'},
-                {align: 'center', toolbar: '#tableBarUser', title: '操作', minWidth: 200}
-            ]]
-        });
-        // 添加
-        $('#btnAddUser').click(function () {
-            showEditModel('{:url("admin/Admin/add")}');
-        });
-        // 搜索
-        form.on('submit(formSubSearchUser)', function (data) {
-            insTb.reload({where: data.field}, 'data');
-        });
+        var treetable = layui.treetable;
+        var iconPicker = layui.iconPicker;
+        var treeSelect = layui.treeSelect;
 
+        // 渲染表格
+        function renderTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'menu_id',
+                treePidName: 'menu_parent_id',
+                elem: '#tableAuth',
+                url: '{:url("admin/menu/index")}',
+
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers', title: '#'},
+                    {field: 'menu_name', title: '权限名称', minWidth: 200},
+                    {
+                        title: '菜单url', templet: function (d) {
+                            return d.control + '/' + d.method;
+                        }
+                    },
+                    {
+                        field: 'icon', title: '图标', align: 'center', templet: function (d) {
+                            let html = d.icon ? '  <i class="layui-icon ' + d.icon + '"></i> ' : '<font color="red">无图标</font>';
+
+                            return html;
+                        }
+                    },
+                    {field: 'sort', title: '排序号', align: 'center'},
+                    {templet: '#tableBarAuth', title: '操作', align: 'center', minWidth: 120}
+                ]],
+                done: function () {
+                    treetable.foldAll('#tableAuth');
+                }
+            });
+        }
+
+        renderTable();
+        // 添加按钮点击事件
+        $('#btnAddAuth').click(function () {
+            showEditModel("{:url('admin/menu/add')}");
+        });
         // 工具条点击事件
-        table.on('tool(tableUser)', function (obj) {
+        table.on('tool(tableAuth)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
             if (layEvent === 'edit') { // 修改
-                showEditModel('{:url("admin/Admin/upd")}',data);
+
+                showEditModel("{:url('admin/menu/upd')}",data);
             } else if (layEvent === 'del') { // 删除
-                doDel(data.admin_id, data.admin_nickname);
-            } else if (layEvent === 'reset') { // 重置密码
-                resetPsw(data.admin_id, data.admin_nickname);
+                doDel(data.id, data.menu_name);
             }
         });
 
-        // 显示表单弹窗
-        function showEditModel(url='',mUser) {
+        // 删除
+        function doDel(authorityId, authorityName) {
+            layer.confirm('确定要删除“' + authorityName + '”吗？', {
+                skin: 'layui-layer-admin',
+                shade: .1
+            }, function (index) {
+                layer.close(index);
+                layer.load(2);
+                $.get('{:url("admin/menu/del")}', {
+                    authorityId: authorityId
+                }, function (res) {
+                    layer.closeAll('loading');
+                    if (res.code == 200) {
+                        layer.msg(res.msg, {icon: 1});
+                        renderTable();
+                    } else {
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }, 'json');
+            });
+        }
 
+        // 显示表单弹窗
+        function showEditModel(url, mAuth) {
             admin.open({
                 type: 1,
-                title: (mUser ? '修改' : '添加') + '用户',
-                content: $('#modelUser').html(),
+                anim: 4,
+                area: '600px',
+                title: (mAuth ? '修改' : '添加') + '权限',
+                content: $('#modelAuth').html(),
                 success: function (layero, dIndex) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');
 
+                    if (mAuth && mAuth.isMenu == '1') {
+                        $('#modelAuthForm input[name="isMenu"][value="1"]').prop("checked", true);
+                    }
+                    treeSelect.render({
+                        // 选择器
+                        elem: '#tree',
+                        // 数据
+                        data: '{:url("admin/menu/add")}',
+                        // 异步加载方式：get/post，默认get
+                        type: 'get',
+                        // 占位符
+                        placeholder: '输入关键字',
+                        // 是否开启搜索功能：true/false，默认false
+                        search: true,
+                        // 点击回调
+                        click: function(d){
+                            $('input[name="menu_parent_id"]').val( d.current.id);
+                        },
+                        // 加载完成后的回调函数
+                        success: function (d) {
+//                选中节点，根据id筛选
 
+                    if (mAuth){
+                        treeSelect.checkNode('tree', mAuth.menu_parent_id);
+                        iconPicker.checkIcon('iconPicker', mAuth.icon);
+                    }
+//                treeSelect.checkNode('tree', 3);
 
-                    // 回显数据
-                    form.val('modelUserForm', mUser);
+//                获取zTree对象，可以调用zTree方法
+//                var treeObj = treeSelect.zTree('tree');
+//                console.log(treeObj);
+
+//                刷新树结构
+//                treeSelect.refresh();
+                        }
+                    });
+                    iconPicker.render({
+                        // 选择器，推荐使用input
+                        elem: '#iconPicker',
+                        // 数据类型：fontClass/unicode，推荐使用fontClass
+                        type: 'fontClass',
+                        // 是否开启搜索：true/false
+                        search: true,
+                        // 是否开启分页
+                        page: true,
+                        // 每页显示数量，默认12
+                        limit: 12,
+                        // 点击回调
+                        click: function (data) {
+                          let icon = data.icon;
+                            $('input[name="icon"]').val(icon);
+                        }
+                    });
+
+                   form.val('modelAuthForm',mAuth);  // 回显数据
                     // 表单提交事件
-                    form.on('submit(modelSubmitUser)', function (data) {
-                        layer.load(3);
+                    form.on('submit(modelSubmitAuth)', function (data) {
+                        if (data.field.parentId == '') {
+                            data.field.parentId = '-1';
+                        }
+                        layer.load(2);
                         $.post(url, data.field, function (res) {
                             layer.closeAll('loading');
                             if (res.code == 200) {
                                 layer.close(dIndex);
                                 layer.msg(res.msg, {icon: 1});
-                                insTb.reload({}, 'data');
+                                renderTable();
                             } else {
                                 layer.msg(res.msg, {icon: 2});
                             }
@@ -220,69 +280,45 @@
             });
         }
 
-        // 删除
-        function doDel(admin_id, nickName) {
-            layer.confirm('确定要删除“' + nickName + '”吗？', {
-                skin: 'layui-layer-admin',
-                shade: .1
-            }, function (i) {
-                layer.close(i);
-                layer.load(2);
-                $.get('{:url("admin/Admin/del")}', {
-                    admin_id: admin_id
-                }, function (res) {
-                    layer.closeAll('loading');
-                    if (res.code == 200) {
-                        layer.msg(res.msg, {icon: 1});
-                        insTb.reload({}, 'data');
-                    } else {
-                        layer.msg(res.msg, {icon: 2});
+        // 搜索按钮点击事件
+        $('#btnSearchAuth').click(function () {
+            $('#edtSearchAuth').removeClass('layui-form-danger');
+            var keyword = $('#edtSearchAuth').val();
+            var $tds = $('#tableAuth').next('.treeTable').find('.layui-table-body tbody tr td');
+            $tds.css('background-color', 'transparent');
+            if (!keyword) {
+                layer.tips('请输入关键字', '#edtSearchAuth', {tips: [1, '#ff4c4c']});
+                $('#edtSearchAuth').addClass('layui-form-danger');
+                $('#edtSearchAuth').focus();
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', '#FAE6A0');
+                    if (searchCount == 0) {
+                        $('body,html').stop(true);
+                        $('body,html').animate({scrollTop: $(this).offset().top - 150}, 500);
                     }
-                }, 'json');
-            });
-        }
-
-        // 修改用户状态
-        form.on('switch(ckStateUser)', function (obj) {
-            layer.load(2);
-            $.get('{:url("admin/Admin/upd")}', {
-                admin_id: obj.elem.value,
-                status: obj.elem.checked ? 0 : 1
-            }, function (res) {
-                layer.closeAll('loading');
-                console.log(res);
-                if (res.code == 200) {
-                    layer.msg(res.msg, {icon: 1});
-                } else {
-                    layer.msg(res.msg, {icon: 2});
-                    $(obj.elem).prop('checked', !obj.elem.checked);
-                    form.render('checkbox');
+                    searchCount++;
                 }
-            }, 'json');
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5, anim: 6});
+            } else {
+                treetable.expandAll('#tableAuth');
+            }
         });
 
-        // 重置密码
-        function resetPsw(userId, nickName) {
-            layer.confirm('确定要重置“' + nickName + '”的登录密码吗？', {
-                skin: 'layui-layer-admin',
-                shade: .1
-            }, function (i) {
-                layer.close(i);
-                layer.load(2);
-                $.get('{:url("admin/Admin/upd")}', {
-                    admin_id: userId
-                }, function (res) {
-                    layer.closeAll('loading');
-                    if (res.code == 200) {
-                        layer.msg(res.msg, {icon: 1});
-                    } else {
-                        layer.msg(res.msg, {icon: 2});
-                    }
-                }, 'json');
-            });
-        }
+        $('#btnExpandAuth').click(function () {
+            treetable.expandAll('#tableAuth');
+        });
+
+        $('#btnFoldAuth').click(function () {
+            treetable.foldAll('#tableAuth');
+        });
+
     });
 </script>
-
 </body>
 </html>

@@ -4,7 +4,7 @@ namespace app\Admin\model;
 use think\Loader;
 use think\Model;
 
-class Attribute  extends  Model{
+class Member  extends  Model{
     public $error;
 
     public function lists(){
@@ -17,14 +17,13 @@ class Attribute  extends  Model{
             $data= input('post.');
         }
             /*数据验证*/
-        $validate  = Loader::validate('Attribute');
+        $validate  = Loader::validate('Type');
         if (!$validate->check($data)) {
             $this->error=  $validate->getError();
             return false;
         }else{
             return $this->save($data);
         }
-
 
     }
 

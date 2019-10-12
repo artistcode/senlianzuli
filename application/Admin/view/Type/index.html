@@ -94,7 +94,6 @@
         };
 
         renderTable(); //初始化表格
-
         // 工具条点击事件
         table.on('tool(type_list)', function (obj) {
             var data = obj.data;
@@ -146,13 +145,17 @@
                     });
                     break;
                 case 'attribute_list':
-                    alert('check attribute');
+                    admin.open({
+                        type: 2,
+                        anim: 4,
+                        area: ['600px','500px'],
+                        title: '属性列表',
+                        content: "{:url('admin/attribute/index')}",
+                    });
                     break;
                 default :
                     console.error('未定义事件'+location.href);
-
             }
-
         });
         /*头部工具点击事件*/
         $('#toolbar').on('click', 'button', function (e) {
@@ -163,9 +166,8 @@
                     /*类型添加*/
                     admin.open({
                         type: 1,
-                        shade: [1, '#393D49'],
                         anim: 4,
-                        area: ['600px', '600px'],
+                        area:['600px'],
                         title: '添加',
                         content: $('#form_template').html(),
                         success: function (layero, dIndex) {

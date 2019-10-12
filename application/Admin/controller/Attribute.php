@@ -5,7 +5,6 @@ use think\Db;
 use think\Loader;
 use think\Request;
 use think\View;
-
 class  Attribute extends  Common{
 
     public function index(){

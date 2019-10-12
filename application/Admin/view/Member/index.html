@@ -20,13 +20,13 @@
                             class="layui-icon layui-icon-delete"></i></button>
                 </div>
             </div>
-            <table class="layui-table" id="type_list" lay-filter="type_list"></table>
+            <table class="layui-table" id="member_list" lay-filter="member_list"></table>
         </div>
     </div>
 </div>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="type_operation">
+<script type="text/html" id="member_operation">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-xs" lay-event="attribute_list">属性</a>
@@ -36,12 +36,12 @@
 
 <!-- 表单弹窗 -->
 <script type="text/html" id="form_template">
-    <form action="" class="layui-form" style="margin-top:30px;" lay-filter="type_form" >
+    <form action="" class="layui-form" style="margin-top:30px;" lay-filter="member_form" >
         <div class="layui-form-item">
             <label class="layui-form-label">类型名称</label>
             <div class="layui-input-inline">
-                <input type="hidden" name="type_id">
-                <input type="text" class="layui-input" lay-verify="required" lay-verType="tips" name="type_name">
+                <input type="hidden" name="member_id">
+                <input type="text" class="layui-input" lay-verify="required" lay-verType="tips" name="member_name">
             </div>
             <div class="layui-form-mid layui-word-aux">描述字段</div>
         </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="type_submit">立即提交</button>
+                <button class="layui-btn" lay-submit lay-filter="member_submit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
@@ -72,8 +72,8 @@
         var admin = layui.admin;
         var renderTable = function () {
             table.render({
-                elem: '#type_list',
-                url: './',
+                elem: '#member_list',
+                url: 'index',
                 page: true,
                 limit: 10,
                 toolbar: true,
@@ -81,10 +81,12 @@
                 cols: [[
                     {type: 'numbers', title: '#'},
                     {type: 'checkbox'},
-                    {field: 'Manufacturing', sort: true, title: '品牌名称'},
-                    {field: 'logo', sort: true, title: '图片'},
-                    {field: 'sort', sort: true, title: '排序'},
-                    {align: 'center', toolbar: '#type_operation', title: '操作', minWidth: 200}
+                    {field: 'username', sort: true, title: '用户名'},
+                    {field: 'email', sort: true, title: '邮箱'},
+                    {field: 'phone', sort: true, title: '手机'},
+                    {field: 'register_time', sort: true, title: '注册时间'},
+                    {field: 'openid', sort: true, title: 'openid'},
+                    {align: 'center', toolbar: '#member_operation', title: '操作', minWidth: 200}
                 ]]
                 , response: {
                     statusName: 'code' //规定数据状态的字段名称，默认：code
@@ -97,7 +99,7 @@
         renderTable(); //初始化表格
 
         // 工具条点击事件
-        table.on('tool(type_list)', function (obj) {
+        table.on('tool(member_list)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
             switch (layEvent) {
@@ -111,9 +113,9 @@
                         content: $('#form_template').html(),
                         success: function (layero, dIndex) {
                             // profiling   analyze
-                            form.val('type_form',obj.data);
-                            $('input[name=type_id]').val(obj.data['type_id']);
-                            form.on('submit(type_submit)', function (data) {
+                            form.val('member_form',obj.data);
+                            $('input[name=member_id]').val(obj.data['member_id']);
+                            form.on('submit(member_submit)', function (data) {
                                 let field = data.field; // 表单提交字段
                                 $.post('edit', field, function (response) {
                                     response = JSON.parse(response);
@@ -134,7 +136,7 @@
                     });
                     break;
                 case 'del':
-                    $.get('delete', {id:obj.data.type_id}, function (response) {
+                    $.get('delete', {id:obj.data.member_id}, function (response) {
                         response = JSON.parse(response);
                         switch (response.code) {
                             case 200:
@@ -171,7 +173,7 @@
                         content: $('#form_template').html(),
                         success: function (layero, dIndex) {
                             // profiling   analyze
-                            form.on('submit(type_submit)', function (data) {
+                            form.on('submit(member_submit)', function (data) {
                                 let field = data.field; // 表单提交字段
                                 $.post('add', field, function (response) {
                                     response = JSON.parse(response);
@@ -194,8 +196,8 @@
                     });
                     break;
                 case 'delete':
-                    let checkStatus = table.checkStatus('type_list');
-                    let checkData = checkStatus.data.map((item)=>item['type_id']);
+                    let checkStatus = table.checkStatus('member_list');
+                    let checkData = checkStatus.data.map((item)=>item['member_id']);
                     $.get('delete', {id: checkData.join(',')}, function (response) {
                         response = JSON.parse(response);
                         switch (response.code) {

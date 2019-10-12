@@ -14,7 +14,15 @@ class Common extends  Controller
         /* 公共控制器做一些  验证 登录 验证码 等操作*/
         if (!session('?uid')){
             $this->redirect('Admin/Free/login');
+        }else{
+
+
         }
+    }
+
+    private function auth_type(){
+
+
     }
 
     protected  function api_format($code,$msg,$data=array(),$count='')
@@ -22,7 +30,6 @@ class Common extends  Controller
         $interface = [
             'code'=>$code,
             'msg'=>$msg,
-
         ];
 
         if (!empty($count)){

@@ -24,71 +24,119 @@
         </div>
     </div>
 </div>
-
-<!-- 表格操作列 -->
-<script type="text/html" id="attribute_operation">
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-xs" lay-event="attribute_list">属性</a>
-</script>
-<!-- 表格状态列 -->
-
-
 <!-- 表单弹窗 -->
 <script type="text/html" id="form_template">
-    <form action="" class="layui-form" style="margin-top:30px;" lay-filter="type_form">
+    <form action="" class="layui-form" style="margin-top:30px;" lay-filter="attr_form">
         <div class="layui-form-item">
-            <label  class="layui-form-label">属性名</label>
+            <label class="layui-form-label">属性组名称</label>
             <div class="layui-input-inline">
-                <input type="text" class="layui-input"></div>
+                <input type="text" name="attr_name" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
+        </div>
         <div class="layui-form-item">
-            <label  class="layui-form-label">商品类型</label>
+            <label class="layui-form-label">商品类型</label>
             <div class="layui-input-inline">
-                <select name="type_id">
+                <select name="type_id" lay-verify="required">
                     <option value="">请选择</option>
                     {volist name="type" id="vo"}
-                    <option value="{$vo.type_id}">{$vo.type_name}</option>
+                        <option value="{$vo.type_id}">{$vo.type_name}</option>
                     {/volist}
-
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label  class="layui-form-label">属性类型</label>
-            <div class="layui-input-inline">
-                <select name="type_id" >
-                    <option value="">请选择</option>
-                    {volist name="attr_type" id="vo"}
-                    <option value="{$vo.attr_type_id}">{$vo.attr_type_name}</option>
-                    {/volist}
-                </select>
-            </div>
-        </div>
-        <div class="layui-form-item"><label  class="layui-form-label">属性值</label>
-            <div class="layui-input-block" >
-                <input type="text" name="attr_val" class="layui-input">
+            <label class="layui-form-label">属性名录入方式</label>
+            <div class="layui-input-block">
+                <input type="radio" name="attr_type" value="1" title="手工录入" checked />
+                <input type="radio" name="attr_type" value="2" title="下拉选择"/>
+                <input type="radio" name="attr_type" value="3" title="图片"/>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="type_submit">立即提交</button>
+                <button class="layui-btn" lay-submit lay-filter="attr_submit">立即提交</button>
                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </form>
 </script>
 <!-- js部分 -->
-
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'admin', 'tagsInput'], function () {
+    layui.use(['layer', 'form', 'table', 'util','tableX','admin', 'tagsInput','contextMenu'], function () {
         let $ = layui.jquery,
             layer = layui.layer,
             form = layui.form,
             table = layui.table,
             util = layui.util,
             admin = layui.admin,
-            tagsInput = layui.tagsInput;
+            tagsInput = layui.tagsInput,
+             tableX = layui.tableX,
+            contextMenu = layui.contextMenu;
+
+        contextMenu.bind('html', [{
+            icon: 'layui-icon layui-icon-refresh',
+            name: '刷新子页面',
+            click: function () {
+                location.reload();
+            }
+        }, {
+            name: '刷新主框架',
+            click: function () {
+                top.location.reload();
+            },
+            hr: true
+        }, {
+            icon: 'layui-icon layui-icon-snowflake',
+            name: '菜单项一',
+            click: function () {
+                layer.msg('点击了菜单一', {icon: 1});
+            }
+        }, {
+            icon: 'layui-icon layui-icon-location',
+            name: '菜单项二',
+            click: function () {
+                layer.msg('点击了菜单二', {icon: 1});
+            }
+        }, {
+            name: '菜单项三',
+            subs: [{
+                name: '子菜单一',
+                click: function () {
+                    layer.msg('点击了子菜单一', {icon: 1});
+                }
+            }, {
+                name: '子菜单二',
+                click: function () {
+                    layer.msg('点击了子菜单二', {icon: 1});
+                }
+            }, {
+                name: '子菜单三',
+                subs: [{
+                    name: '三级菜单一',
+                    click: function () {
+                        layer.msg('点击了三级菜单一', {icon: 1});
+                    }
+                }, {
+                    name: '三级菜单二',
+                    subs: [{
+                        name: '四级菜单一',
+                        click: function () {
+                            layer.msg('点击了四级菜单一', {icon: 1});
+                        }
+                    }, {
+                        name: '四级菜单二',
+                        click: function () {
+                            layer.msg('点击了四级菜单二', {icon: 1});
+                        }
+                    }]
+                }]
+            }]
+        }, {
+            name: '菜单四',
+            click: function () {
+                layer.msg('点击了菜单四', {icon: 1});
+            }
+        }]);
         renderTable = function () {
             table.render({
                 elem: '#attribute_list',
@@ -100,15 +148,44 @@
                 cols: [[
                     {type: 'numbers', title: '#'},
                     {type: 'checkbox'},
-                    {field: 'attr_name', sort: true, title: '名称'},
-                    {field: 'attr_type', sort: true, title: '类型'},
-                    {field: 'attr_input_type', sort: true, title: '录入方式'},
+
+                    {field: 'attr_name', sort: true, title: '属性组名'},
+                    {field:'attr_type', title: '属性类型',align:"center", width: 200, templet: function(d){
+                         let temp = [null,
+                             '<span class="layui-badge layui-bg-gray ">手工录入</span>',
+                             '<span class="layui-badge layui-bg-green">下拉选择</span>',
+                             '<span class="layui-badge  layui-bg-black">图片<i class="layui-icon layui-icon-picture-fine" ></i></span>',
+                         ];
+                         return temp[d.attr_type];
+                        }},
                     {field: 'attr_values', sort: true, title: '可以选值'},
-                    {align: 'center', toolbar: '#attribute_operation', title: '操作', minWidth: 200}
                 ]]
                 , response: {
                     statusName: 'code' //规定数据状态的字段名称，默认：code
                     , statusCode: 200 //规定成功的状态码，默认：0
+                },
+                done: function () {
+                    // 绑定鼠标右键
+                    tableX.bindCtxMenu('attribute_list',
+                        [{
+                            icon: 'layui-icon layui-icon-tips',
+                            name: '查看详情',
+                            click: function (d) {
+                                layer.msg('点击了详情，userId：' + JSON.stringify(d));
+                            }
+                        },{
+                            icon: 'layui-icon layui-icon-edit',
+                            name: '修改',
+                            click: function (d) {
+                                layer.msg('点击了修改，userId：' + d.userId);
+                            }
+                        },{
+                            icon: 'layui-icon layui-icon-close text-danger',
+                            name: '<span class="text-danger">删除</span>',
+                            click: function (d) {
+                                layer.msg('点击了删除' + d.attr_id);
+                            }
+                        }]);
                 }
 
             });
@@ -181,54 +258,34 @@
             switch (event) {
                 case 'add' :
                     /*类型添加*/
+                    //初始化动态条件查询实例
                     admin.open({
                         type: 1,
-                        shade: [1, '#393D49'],
                         anim: 4,
-                        area: ['600px', '600px'],
-                        title: '添加',
+                        area: ['600px'],
+                        title: '类型编辑',
                         content: $('#form_template').html(),
-                        success: function (layero, dIndex) {
-                            // profiling   analyze
-                            $('input[name=attr_val]').tagsInput();
+                        success:function(lay,index){
                             form.render();
-                            form.on('submit(type_submit)', function (data) {
-                                let field = data.field; // 表单提交字段
-                                $.post('add', field, function (response) {
-                                    response = JSON.parse(response);
-
-                                    switch (response.code) {
+                            form.on('submit(attr_submit)',function(data){
+                                $.post('add', data.field, function (response) {
+                                    let res = JSON.parse(response);
+                                    switch (res.code) {
                                         case 200:
-                                            layer.msg(response.msg, {icon: 1});
+                                            layer.msg(res.msg, {icon: 1});
                                             renderTable();
-                                            layer.close(dIndex);
+                                            layer.close(index);
                                             break;
                                         default :
-                                            layer.msg(response.msg, {icon: 5});
+                                            layer.msg(res.msg, {icon: 5});
 
                                     }
                                 });
                                 return false;
                             });
                         }
+                    });
 
-                    });
-                    break;
-                case 'delete':
-                    let checkStatus = table.checkStatus('attribute_list');
-                    let checkData = checkStatus.data.map((item) => item['type_id']);
-                    $.get('delete', {id: checkData.join(',')}, function (response) {
-                        response = JSON.parse(response);
-                        switch (response.code) {
-                            case 200:
-                                layer.msg(response.msg, {icon: 1});
-                                renderTable();
-                                layer.close(dIndex);
-                                break;
-                            default :
-                                layer.msg(response.msg, {icon: 5});
-                        }
-                    });
                     break;
                 default :
                     console.error('未定义事件');
