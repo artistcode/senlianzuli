@@ -15,7 +15,6 @@ class  Attribute extends  Common{
         $view =new View();
         $type = Db::name('type')->select();
         $attr_type  = Db::name('attribute_type')->select();
-
         $view->assign('type',$type);
         $view->assign('attr_type',$attr_type);
         return $view->fetch();
